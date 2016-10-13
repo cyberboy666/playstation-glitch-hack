@@ -44,30 +44,27 @@ void setup()
                                                           // measured in microseconds.
                                                           // too small delay may not work (under 5)
   pinMode(LEDPin, OUTPUT);                                // Establishes LEDPin as an output so the LED can be seen
-  pinMode(2, OUTPUT);
-  pinMode(3, OUTPUT);
-  pinMode(4, OUTPUT);
-  pinMode(5, OUTPUT);
-  pinMode(6, OUTPUT);
-  pinMode(7, OUTPUT);
-  pinMode(A1, OUTPUT);
-  pinMode(A2, OUTPUT);
   Serial.begin(9600);
 
+  int pins[14] = {2, 3, 4, 5, 6, 7, 12, 13, A0, A1, A2, A3, A4, A5};
+  for (int i=0; i < (sizeof(pins)/sizeof(int)); i++){
+    pinMode(pins[i], OUTPUT);
+  }
 }
+
 
 void doStuff(long diff, int pin) {
   if (diff > 0) {
     Serial.print("Turned pin ");
     Serial.print(pin);
     Serial.println(" on");
-    digitalWrite(pin, HIGH);
+    digitalWrite(pin, LOW);
   }
   else if (diff < 0) {
     Serial.print("Turned pin ");
     Serial.print(pin);
     Serial.println(" off");
-    digitalWrite(pin, LOW);
+    digitalWrite(pin, HIGH);
   }
   else {
     Serial.println("We somehow got 0?");
@@ -85,19 +82,19 @@ void loop() {
     long diff = data - current;
     switch (abs(diff)) {
       case psxLeft:
-        doStuff(diff, 0);
+        doStuff(diff, A0);
         break;
       case psxDown:
-        doStuff(diff, 0);
+        doStuff(diff, 4);
         break;
       case psxRight:
-        doStuff(diff, 0);
+        doStuff(diff, 7);
         break;
       case psxUp:
-        doStuff(diff, 0);
+        doStuff(diff, A4);
         break;
       case psxStrt:
-        doStuff(diff, 0);
+        doStuff(diff, 2);
         break;
       case psxRTrig:
         doStuff(diff, 0);
@@ -106,16 +103,16 @@ void loop() {
         doStuff(diff, 0);
         break;
       case psxSlct:
-        doStuff(diff, 0);
-        break;
-      case psxSqu:
-        doStuff(diff, 2);
-        break;
-      case psxX:
         doStuff(diff, 3);
         break;
+      case psxSqu:
+        doStuff(diff, A2);
+        break;
+      case psxX:
+        doStuff(diff, 12);
+        break;
       case psxO:
-        doStuff(diff, 4);
+        doStuff(diff, A3);
         break;
       case psxTri:
         doStuff(diff, 5);
@@ -124,13 +121,13 @@ void loop() {
         doStuff(diff, 6);
         break;
       case psxL1:
-        doStuff(diff, 7);
+        doStuff(diff, 13);
         break;
       case psxR2:
-        doStuff(diff, A1);
+        doStuff(diff, A5);
         break;
       case psxL2:
-        doStuff(diff, A2);
+        doStuff(diff, 0);
         break;
     }
     current = data; 
